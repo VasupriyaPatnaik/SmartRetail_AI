@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        form label {
+            display: block;
+            margin: 5px 0;
+        }
+
+        form input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .loading {
+            display: inline-block;
+            margin-left: 10px;
+            color: #666;
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+
+        .error {
+            color: #d9534f;
+            background-color: #f2dede;
+            border: 1px solid #ebccd1;
+        }
+
+        .success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border: 1px solid #d6e9c6;
+        }
+
+        .hidden {
+            display: none;
+        }
+        
+        .status-indicator {
+            text-align: center;
+            padding: 5px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        
+        .status-online {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        
+        .status-offline {
+            background-color: #f2dede;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Inventory Management System</h1>
+        
+        <div id="api-status" class="status-indicator">Checking API status...</div>
+    
+        <!-- Demand Forecast Section -->
+        <section>
+            <h2>Demand Forecast</h2>
+            <form id="forecast-form">
+                <label for="forecast-product-id">Product ID:</label>
+                <input type="text" id="forecast-product-id" name="forecast-product-id" required>
+    
+                <label for="predicted_demand">Predicted Demand:</label>
+                <input type="number" id="predicted_demand" name="predicted_demand" required>
+    
+                <button type="submit">Submit Forecast</button>
+                <span id="forecast-loading" class="loading hidden">Processing...</span>
+            </form>
+            <div id="forecast-result" class="result hidden"></div>
+        </section>
+    
+        <!-- Stock Optimization Section -->
+        <section>
+            <h2>Stock Optimization</h2>
+            <button id="optimize-stock-btn" type="button">Optimize Stock</button>
+            <span id="optimize-loading" class="loading hidden">Processing...</span>
+            <div id="stock-optimization-result" class="result hidden"></div>
+        </section>
+    
+        <!-- Anomaly Detection Section -->
+        <section>
+            <h2>Detect Anomalies</h2>
+            <button id="detect-anomalies-btn" type="button">Detect Anomalies</button>
+            <span id="anomaly-loading" class="loading hidden">Processing...</span>
+            <div id="anomaly-result" class="result hidden"></div>
+        </section>
+    
+        <!-- Restock Recommendation Section -->
+        <section>
+            <h2>Restock Recommendations</h2>
+            <form id="restock-form">
+                <label for="restock-product-id">Product ID:</label>
+                <input type="text" id="restock-product-id" name="restock-product-id" required>
+    
+                <label for="recommended_stock">Recommended Stock:</label>
+                <input type="number" id="recommended_stock" name="recommended_stock" required>
+    
+                <button type="submit">Submit Restock</button>
+                <span id="restock-loading" class="loading hidden">Processing...</span>
+            </form>
+            <div id="restock-result" class="result hidden"></div>
+        </section>
+
+        <!-- POS System Section -->
+        <section>
+            <h2>POS System (Simulate Sales)</h2>
+            <form id="pos-form">
+                <label for="pos-product-id">Product ID:</label>
+                <input type="text" id="pos-product-id" name="pos-product-id" required>
+                <button type="submit">Simulate Sale</button>
+                <span id="pos-loading" class="loading hidden">Processing...</span>
+            </form>
+            <div id="pos-result" class="result hidden"></div>
+        </section>
+    </div>
+    
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const baseUrl = window.location.origin; // Dynamically determine the base URL
+        
+        // Check API status on page load
+        checkApiStatus();
+        
+        function checkApiStatus() {
+            const statusElement = document.getElementById("api-status");
+            
+            fetch(`${baseUrl}/test`)
+                .then(response => {
+                    if (response.ok) {
+                        statusElement.textContent = "API is online";
+                        statusElement.classList.add("status-online");
+                        statusElement.classList.remove("status-offline");
+                        return response.json();
+                    } else {
+                        throw new Error("API is not responding properly");
+                    }
+                })
+                .catch(error => {
+                    console.error("API Status Error:", error);
+                    statusElement.textContent = "API is offline or not responding";
+                    statusElement.classList.add("status-offline");
+                    statusElement.classList.remove("status-online");
+                });
+        }
+
+        function displayResult(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.classList.remove("hidden", "error", "success");
+            element.classList.add(isError ? "error" : "success");
+            
+            if (typeof data === 'object') {
+                element.innerHTML = JSON.stringify(data, null, 2);
+            } else {
+                element.innerHTML = data;
+            }
+        }
+        
+        function setLoading(elementId, isLoading) {
+            const loadingElement = document.getElementById(elementId);
+            if (isLoading) {
+                loadingElement.classList.remove("hidden");
+            } else {
+                loadingElement.classList.add("hidden");
+            }
+        }
+
+        function handleResponse(response) {
+            // First check if response is ok
+            if (!response.ok) {
+                return response.text().then(text => {
+                    // Try to parse as JSON, but handle case where it's not valid JSON
+                    try {
+                        const data = JSON.parse(text);
+                        throw new Error(data.error || `Server Error (${response.status}): ${response.statusText}`);
+                    } catch (e) {
+                        if (e instanceof SyntaxError) {
+                            throw new Error(`Server Error (${response.status}): ${text || response.statusText}`);
+                        } else {
+                            throw e;
+                        }
+                    }
+                });
+            }
+            
+            // For successful responses, try to parse as JSON
+            return response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    throw new Error(`Invalid JSON response: ${e.message}`);
+                }
+            });
+        }
+
+        function handleError(error, elementId) {
+            console.error("Error:", error);
+            displayResult(elementId, `<strong>Error:</strong> ${error.message || error}`, true);
+        }
+
+        // Forecast Form Submit
+        document.getElementById("forecast-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            setLoading("forecast-loading", true);
+
+            const productId = document.getElementById("forecast-product-id").value;
+            const predictedDemand = document.getElementById("predicted_demand").value;
+            const data = { product_id: productId, predicted_demand: predictedDemand };
+
+            fetch(`${baseUrl}/forecast_demand`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            })
+            .then(handleResponse)
+            .then(data => {
+                displayResult("forecast-result", `<strong>Forecast Insight:</strong> ${data.forecast_insight}`);
+            })
+            .catch(error => handleError(error, "forecast-result"))
+            .finally(() => {
+                setLoading("forecast-loading", false);
+            });
+        });
+
+        // Stock Optimization Button Click
+        document.getElementById("optimize-stock-btn").addEventListener("click", function () {
+            setLoading("optimize-loading", true);
+            
+            fetch(`${baseUrl}/optimize_stock`)
+            .then(handleResponse)
+            .then(data => {
+                let resultHTML = `<strong>Optimization Insight:</strong> ${data.optimization_insight}<br><br>`;
+                resultHTML += `<strong>Stock Recommendations:</strong><br>`;
+                
+                const recommendations = data.stock_recommendations;
+                if (Object.keys(recommendations).length === 0) {
+                    resultHTML += "No recommendations available. Please add forecast data first.";
+                } else {
+                    for (const [productId, quantity] of Object.entries(recommendations)) {
+                        resultHTML += `Product ${productId}: ${quantity} units<br>`;
+                    }
+                }
+                
+                displayResult("stock-optimization-result", resultHTML);
+            })
+            .catch(error => handleError(error, "stock-optimization-result"))
+            .finally(() => {
+                setLoading("optimize-loading", false);
+            });
+        });
+
+        // Anomaly Detection Button Click
+        document.getElementById("detect-anomalies-btn").addEventListener("click", function () {
+            setLoading("anomaly-loading", true);
+            
+            fetch(`${baseUrl}/detect_anomalies`)
+            .then(handleResponse)
+            .then(data => {
+                let resultHTML = `<strong>Anomaly Insight:</strong> ${data.anomaly_insight}<br><br>`;
+                
+                if (!data.anomalies || data.anomalies.length === 0) {
+                    resultHTML += `<strong>No anomalies detected</strong>`;
+                } else {
+                    resultHTML += `<strong>Detected Anomalies:</strong><br>`;
+                    data.anomalies.forEach(anomaly => {
+                        resultHTML += `Product ${anomaly.product_id}: ${anomaly.issue}<br>`;
+                    });
+                }
+                
+                displayResult("anomaly-result", resultHTML);
+            })
+            .catch(error => handleError(error, "anomaly-result"))
+            .finally(() => {
+                setLoading("anomaly-loading", false);
+            });
+        });
+
+        // Restock Form Submit
+        document.getElementById("restock-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            setLoading("restock-loading", true);
+
+            const productId = document.getElementById("restock-product-id").value;
+            const recommendedStock = document.getElementById("recommended_stock").value;
+            const data = { product_id: productId, recommended_stock: recommendedStock };
+
+            fetch(`${baseUrl}/restock`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            })
+            .then(handleResponse)
+            .then(data => {
+                displayResult("restock-result", `<strong>Restock Insight:</strong> ${data.restock_insight}`);
+            })
+            .catch(error => handleError(error, "restock-result"))
+            .finally(() => {
+                setLoading("restock-loading", false);
+            });
+        });
+
+        // POS Form Submit (Sales Simulation)
+        document.getElementById("pos-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            setLoading("pos-loading", true);
+
+            const productId = document.getElementById("pos-product-id").value;
+
+            fetch(`${baseUrl}/pos_sales/${productId}`)
+            .then(handleResponse)
+            .then(data => {
+                displayResult("pos-result", `<strong>POS Sale Completed:</strong> Sold ${data.units_sold} units of Product ${data.product_id}. Remaining stock: ${data.remaining_stock} units.`);
+            })
+            .catch(error => handleError(error, "pos-result"))
+            .finally(() => {
+                setLoading("pos-loading", false);
+            });
+        });
+    });
+    </script>
+</body>
+</html>

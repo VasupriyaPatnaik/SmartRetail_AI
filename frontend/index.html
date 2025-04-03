@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>SmartRetail AI | AI-Powered Inventory Optimization</title>
+    <meta name="title" content="SmartRetail AI | AI-Powered Inventory Optimization">
+    <meta name="description" content="Multi-agent system for retail inventory management. Hackathon project for intelligent stock control.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/src/index.css" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" as="style">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/src/index.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+    
+    <!-- Mobile Optimizations -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="SmartRetail AI">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  </head>
+  <body>
+    <div id="root"></div>
+    
+    <!-- Loading Animation -->
+    <div id="app-loading" style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: white;
+      z-index: 9999;
+    ">
+      <div style="
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(99, 102, 241, 0.3);
+        border-radius: 50%;
+        border-top-color: #6366f1;
+        animation: spin 1s ease-in-out infinite;
+      "></div>
+    </div>
+    
+    <script type="module" src="/src/main.jsx"></script>
+    
+    <script>
+      // Remove loading animation when app mounts
+      document.getElementById('root').addEventListener('load', () => {
+        document.getElementById('app-loading').style.display = 'none';
+      });
+      
+      // Register service worker for PWA
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js');
+        });
+      }
+    </script>
+    
+    <style>
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+  </body>
+</html>
