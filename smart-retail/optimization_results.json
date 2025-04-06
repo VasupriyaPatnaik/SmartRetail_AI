@@ -1,0 +1,45 @@
+{
+  "forecasting": {
+    "forecasts_generated": 250,
+    "methods_used": {
+      "exponential_smoothing": 250,
+      "simple_average_fallback": 0
+    }
+  },
+  "inventory": {
+    "status": "success",
+    "updates": 0,
+    "emergencies_handled": 26
+  },
+  "pricing": {
+    "status": "success",
+    "updates": 0
+  },
+  "dashboard": {
+    "visualizations": {
+      "sales_trend": "visualizations/sales_trend.png",
+      "inventory_status": "visualizations/inventory_status.png",
+      "pricing_comparison": "visualizations/pricing_comparison.png"
+    },
+    "metrics": {
+      "total_sales": 36999.0,
+      "avg_stock_level": 60.452,
+      "products_below_reorder": 192,
+      "price_difference": -0.11639999999999998
+    },
+    "recommendations": [
+      {
+        "type": "inventory",
+        "priority": "high",
+        "message": "192 products below reorder point need attention"
+      },
+      {
+        "type": "pricing",
+        "priority": "medium",
+        "message": "32 products priced >10% above competitors"
+      }
+    ]
+  },
+  "status": "success",
+  "timestamp": "2025-04-06 18:33:25"
+}
