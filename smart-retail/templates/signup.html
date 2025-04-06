@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Register | SmartRetail AI{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <!-- Logo Header -->
+            <div class="auth-header text-center mb-5">
+                <div class="auth-logo mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 11l19-9-9 19-2-8-8-2z"></path>
+                        <path d="M12 12l7-7"></path>
+                    </svg>
+                </div>
+                <h2 class="auth-title">Create Account</h2>
+                <p class="auth-subtitle">Join SmartRetail AI to optimize your inventory</p>
+            </div>
+
+            <!-- Registration Form -->
+            <form method="POST" action="{{ url_for('register') }}" class="auth-form">
+                <div class="mb-4">
+                    <label for="username" class="form-label">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-person"></i>
+                        </span>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                    </div>
+                    <div class="form-text">4-20 characters, letters and numbers only</div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="email" class="form-label">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-envelope"></i>
+                        </span>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-lock"></i>
+                        </span>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required>
+                        <button class="btn btn-outline-secondary toggle-password" type="button">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength mt-2">
+                        <div class="progress" style="height: 4px;">
+                            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        <small class="text-muted">Password strength: <span class="strength-text">Weak</span></small>
+                    </div>
+                    <div class="form-text">Minimum 8 characters with numbers and symbols</div>
+                </div>
+
+                <div class="mb-4 form-check">
+                    <input type="checkbox" class="form-check-input" id="terms" required>
+                    <label class="form-check-label" for="terms">
+                        I agree to the <a href="#" class="text-link">Terms of Service</a> and <a href="#" class="text-link">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 auth-btn mb-3">
+                    <span class="btn-text">Create Account</span>
+                    <i class="bi bi-arrow-right"></i>
+                </button>
+
+                <div class="auth-divider my-4">
+                    <span>or sign up with</span>
+                </div>
+
+                <div class="social-login">
+                    <button type="button" class="btn btn-outline-secondary">
+                        <i class="bi bi-google"></i> Google
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary">
+                        <i class="bi bi-microsoft"></i> Microsoft
+                    </button>
+                </div>
+
+                <div class="auth-footer text-center mt-4">
+                    <p>Already have an account? <a href="{{ url_for('login') }}" class="text-link">Sign in</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

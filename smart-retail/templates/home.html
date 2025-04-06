@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+{% block title %}Home | SmartRetail AI{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <!-- Hero Section -->
+    <section class="hero-section py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="hero-title mb-4">Welcome to SmartRetail AI</h1>
+                    <p class="hero-subtitle mb-4">
+                        Transform your retail business with AI-powered inventory optimization, 
+                        demand forecasting, and pricing strategies.
+                    </p>
+                    <div class="hero-cta">
+                        {% if not username %}
+                        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg me-3">Get Started</a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">Login</a>
+                        {% else %}
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg me-3" onclick="launchDashboard()">Go to Dashboard</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <img src="{{ url_for('static', filename='images/retail-analytics.svg') }}" 
+                         alt="Retail Analytics" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Powerful Features</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon mb-3">
+                                <i class="bi bi-graph-up-arrow"></i>
+                            </div>
+                            <h3 class="h5">Demand Forecasting</h3>
+                            <p>
+                                Predict future product demand with 95% accuracy using our 
+                                advanced machine learning models.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon mb-3">
+                                <i class="bi bi-box-seam"></i>
+                            </div>
+                            <h3 class="h5">Inventory Optimization</h3>
+                            <p>
+                                Automatically adjust stock levels to minimize costs while 
+                                preventing stockouts.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="feature-icon mb-3">
+                                <i class="bi bi-tag"></i>
+                            </div>
+                            <h3 class="h5">Dynamic Pricing</h3>
+                            <p>
+                                Optimize prices in real-time based on market conditions, 
+                                demand, and competitor pricing.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works py-5">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">How It Works</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Connect Your Data</h3>
+                        <p>
+                            Integrate with your existing POS, inventory management, 
+                            or ERP systems in minutes.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Let AI Analyze</h3>
+                        <p>
+                            Our algorithms process your historical data to identify 
+                            patterns and trends.
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Get Actionable Insights</h3>
+                        <p>
+                            Receive clear recommendations to optimize your inventory 
+                            and pricing strategies.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview Section -->
+    <section class="dashboard-preview py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Dashboard Preview</h2>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card border-0 shadow">
+                        <div class="card-body p-0">
+                            <div class="ratio ratio-16x9">
+                                <img src="{{ url_for('static', filename='images/dashboard-preview.png') }}" 
+                                     class="img-fluid" alt="Dashboard Preview">
+                            </div>
+                            <div class="p-4 text-center">
+                                <h4>Experience the Full Dashboard</h4>
+                                <p class="mb-4">Get access to real-time analytics and optimization tools</p>
+                                {% if username %}
+                                <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg" onclick="launchDashboard()">
+                                    Open Dashboard <i class="bi bi-arrow-right ms-2"></i>
+                                </a>
+                                {% else %}
+                                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                                    Get Started <i class="bi bi-arrow-right ms-2"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2 class="section-title mb-4">Contact Us</h2>
+                    <p class="mb-4">
+                        Have questions or want to learn more about how SmartRetail AI 
+                        can transform your business?
+                    </p>
+                    <div class="contact-info mb-4">
+                        <div class="d-flex mb-3">
+                            <i class="bi bi-envelope me-3"></i>
+                            <span>support@smartretailai.com</span>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <i class="bi bi-telephone me-3"></i>
+                            <span>+1 (800) 123-4567</span>
+                        </div>
+                        <div class="d-flex">
+                            <i class="bi bi-geo-alt me-3"></i>
+                            <span>123 Retail Street, San Francisco, CA 94107</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <form class="contact-form" id="contactForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Your Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" placeholder="Your Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control" rows="4" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    .hero-section {
+        background-color: #f8f9fa;
+        border-radius: 0 0 20px 20px;
+    }
+    .hero-title {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+    .hero-subtitle {
+        font-size: 1.25rem;
+        color: #7f8c8d;
+    }
+    .feature-icon i {
+        font-size: 2.5rem;
+        color: #3498db;
+    }
+    .step-card {
+        text-align: center;
+        padding: 2rem;
+        border-radius: 10px;
+        background-color: white;
+        height: 100%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease;
+    }
+    .step-card:hover {
+        transform: translateY(-5px);
+    }
+    .step-number {
+        width: 50px;
+        height: 50px;
+        background-color: #3498db;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 0 auto 1rem;
+    }
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+    .contact-form {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    .dashboard-preview {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+</style>
+
+<!-- JavaScript for Dashboard Integration -->
+<script>
+    function launchDashboard() {
+        // Show loading indicator
+        const btn = event.target;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Launching Dashboard...';
+        btn.disabled = true;
+        
+        // Make API call to launch dashboard
+        fetch('/launch-dashboard', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Redirect to Streamlit dashboard
+                window.open(data.dashboard_url, '_blank');
+            } else {
+                alert('Failed to launch dashboard: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while launching the dashboard');
+        })
+        .finally(() => {
+            btn.innerHTML = 'Go to Dashboard';
+            btn.disabled = false;
+        });
+        
+        return false;
+    }
+
+    // Handle contact form submission
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Thank you for your message! We will get back to you soon.');
+        this.reset();
+    });
+</script>
+{% endblock %}

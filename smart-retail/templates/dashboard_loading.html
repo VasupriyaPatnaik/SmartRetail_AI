@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Loading Dashboard | SmartRetail AI{% endblock %}
+
+{% block content %}
+<div class="container my-5 text-center">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    <h2 class="mt-4">Launching SmartRetail Dashboard</h2>
+    <p class="lead">Please wait while we prepare your analytics dashboard...</p>
+    <p>If the dashboard doesn't open automatically, <a href="#" id="dashboardLink">click here</a></p>
+</div>
+
+<script>
+    // Try to open dashboard automatically
+    window.onload = function() {
+        fetch('/launch-dashboard', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.dashboard_url;
+            } else {
+                document.querySelector('h2').textContent = 'Error Launching Dashboard';
+                document.querySelector('p.lead').textContent = data.message;
+            }
+        });
+        
+        // Update the manual link
+        document.getElementById('dashboardLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'http://localhost:8501';
+        });
+    };
+</script>
+{% endblock %}
